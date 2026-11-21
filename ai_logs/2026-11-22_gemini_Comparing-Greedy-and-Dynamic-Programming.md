@@ -211,3 +211,29 @@ Nuance to Highlight in Your Report
 When rewards are independent of duration, short events are disproportionately valuable because they give you a "full" random reward draw while consuming very little timeline space. Both Earliest Finish (which packs the most events) and Largest Reward per Unit of Time (which naturally boosts short events with decent rewards) outperform Largest Reward.
 When rewards grow linearly with duration (reward≈c×duration), every event has nearly the same reward-per-unit-time (c). In that exact linear case, Largest Reward tends to shine because picking long, high-reward events avoids leaving awkward small gaps between short events that nothing else can fit into. If there is variance in the rate (c differs across events), Largest Reward per Unit of Time wins because it prioritizes the highest-paying rate per hour.
 How are you planning to structure the quest_schedule recurrence comparison in the final bullet of section 4.4?
+
+# User prompt: Gemini I have a question im suppose to create testcases. Should I test: 1. most and best pick different sets, reward-greedy fails, earliest-finish fails, two identical events, all rewards equal to 1 where most and best pick the same count 2. 2 prereqs tie for the latest finish, chain follows longer branch, cycles with long hours and also a cycle that goes through each quests not in order
+
+# Response:
+Yes—both sets of test cases are strong choices because they directly target structural edge cases, tie-breaking rules, and graph properties across your interval scheduling (most_events / best_events) and dependency graph (quest_schedule) implementations.
+
+Here is how each group maps to what you need to verify, plus a couple of small additions to make your suite airtight:
+    1. Interval Scheduling (most_events & best_events)
+        Every case you listed tests a distinct failure mode or invariant:
+        most and best pick different sets: Confirms weighted DP does not simply default to maximizing event count.
+        Reward-greedy fails & earliest-finish fails: Directly validates your DP against the greedy traps (and double-checks your counterexamples/ logic).
+        Two identical events: Tests tie-breaking consistency and ensures duplicate intervals don't get double-counted as compatible when they overlap.
+        All rewards equal to 1 (most and best pick the same count): Great sanity check—when weights are uniform, weighted interval scheduling reduces to unweighted interval scheduling, so the optimal total reward must equal the maximum event count.
+        Two quick additions to consider:
+        Boundary-touching events (e.g., [0, 5] and [5, 10]) to verify your strict < vs. <= overlap condition.
+        Density-greedy fails (to complete the trio of greedy rules mentioned in the assignment).
+    2. Quest Dependency Scheduling (quest_schedule)
+        Your graph test cases target the exact pitfalls of DAG longest-path / prerequisite DP and cycle detection:
+        2 prerequisites tie for the latest finish: Verifies deterministic tie-breaking when two prerequisite chains take the exact same critical-path time.
+        Chain follows longer branch (not just more nodes): Confirms your DP weights by quest duration/hours rather than just counting the number of prerequisite hops.
+        Cycles with long hours & a cycle visiting quests out of index/ID order: Crucial for testing cycle detection (DFS / Kahn's topological sort). Testing a cycle where edges point backward in node ID (e.g., Quest 3 -> Quest 1 -> Quest 2 -> Quest 3) ensures your algorithm doesn't accidentally assume quests are already topologically ordered by input index.
+        Two quick additions to consider:
+        Disconnected components / multiple independent roots and sinks so the solver evaluates the max across all components rather than stopping after component 0.
+        A diamond dependency (A -> B, A -> C, B -> D, C -> D) to verify shared prerequisites aren't counted twice in total duration or mismanaged in memoization.
+        Are you organizing these into automated unit test files (like assert-based checks) or command scripts that compare expected stdout against your program's output?
+
