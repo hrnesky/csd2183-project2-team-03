@@ -3,57 +3,63 @@
 
 #include "routes.h"
 
-#include <algorithm>
-#include <functional>
-#include <queue>
-#include <utility>
-#include <vector>
+#include <algorithm>   // std::reverse (Bellman-Ford)
+#include <functional>  // std::greater (Dijkstra)
+#include <queue>       // std::priority_queue
+#include <utility>     // std::pair
+#include <vector>      // std::vector
 
-// dijkstr find the cheapest path from source to every island
-ShortestPaths dijkstra(int n, const std::vector<Edge>& edges, int source) {
-  ShortestPaths result;
+ShortestPaths dijkstra(int n, const std::vector<Edge> & edges,
+                       int source) {
+  // store each outgoing edge as (destination, weight)
+  std::vector<std::vector<std::pair<int, int64_t>>> adj(n);
 
-  // start by assuming no island is reachable
-  // -1 since we do not yet know the previous island on its path
-  result.dist.assign(n, kUnreachable);
-  result.parent.assign(n, -1);
-  result.dist[source] = 0;  // costs nothing to stay at the start
-
-  // build a list of outgoing routes for every island
-  // example: adj[0] = {{1, 5}, {2, 4}} means 0->1 costs 5, 0->2 costs 4
-  std::vector<std::vector<std::pair<int, std::int64_t>>> adj(n);
-  for (const Edge& e : edges) {
+  // build adj list, routes are direct and add each edge once
+  for (Edge const& e : edges) {
     adj[e.from].push_back({e.to, e.weight});
   }
 
-  // a min-heap gives us the island with the lowest known cost first
-  // each entry stores {cost_so_far, island_number}
-  using Item = std::pair<std::int64_t, int>;
-  std::priority_queue<Item, std::vector<Item>, std::greater<Item>> heap;
-  heap.push({0, source});
+  // initialize all distances to inf and all parents to NIL
+  ShortestPaths paths;
+  paths.dist.assign(n, kUnreachable);
+  paths.parent.assign(n, -1);
 
-  while (!heap.empty()) {
-    auto [distance, u] = heap.top();  // take the cheapest queued possibility
-    heap.pop();
+  // set the source distance to zero
+  paths.dist[source] = 0;
 
-    // there may be an older, more expensive entry for this same island
-    // ignore, have cheaper way there
-    if (distance != result.dist[u]) continue;
+  // store candidate entries (distance, vertex) with the smallest distance first
+  std::priority_queue<std::pair<std::int64_t, int>, std::vector<std::pair<std::int64_t, int>>, std::greater<std::pair<std::int64_t, int>>> q;
 
-    // try every route leaving island u.
-    for (auto [v, weight] : adj[u]) {
-      const std::int64_t candidate = distance + weight;
+  // add the source to the min-priority queue
+  q.push({0, source});
 
-      // relaxation | if going through u is cheaper, remember that route
-      if (candidate < result.dist[v]) {
-        result.dist[v] = candidate;  // new cheapest total cost to v
-        result.parent[v] = u;        // we reached v from 
-        heap.push({candidate, v});  // explore this better route later
+  // process vertices in order of their current smallest known distance
+  while (!q.empty()) {
+    std::int64_t const distance = q.top().first; // get and remove the closest queued vertex
+    int const u = q.top().second;
+    q.pop();
+
+    // ignore this entry if a shorter path to u was found after it was queued
+    if (distance != paths.dist[u]) continue;
+
+    // check each directed edge leaving u
+    for (std::pair<int, int64_t> const& edge : adj[u]) {
+      // read the edge's dest and weight
+      int const v = edge.first;
+      std::int64_t const weight = edge.second;
+
+      // compute the distance to v by flwing this edge from you
+      std::int64_t const newDistance = distance + weight;
+
+      // relax the edge if it give v a shorter path
+      if (newDistance < paths.dist[v]) {
+        paths.dist[v] = newDistance; // record the improved distance to v
+        paths.parent[v] = u; // record u as the predecessor of v on the shortest path
+        q.push({newDistance, v}); // queue v so its outging edges can be processed at its new distance
       }
     }
   }
-
-  return result;  // return all distances and parents, not printed output
+  return paths; // return distance and predecessors for every vertex
 }
 
 // bellman-ford: Like dijkstra, but supports NEGATIVE route costs.

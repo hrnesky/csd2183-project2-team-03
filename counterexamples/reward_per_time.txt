@@ -1,0 +1,8 @@
+# Counterexample: "largest reward per unit of time" is not optimal.
+# Event 1 has the higher rate (3/2 = 1.5 vs 10/10 = 1) but is short and sits inside
+# event 0, blocking it. Greedy takes event 1 (total 3); the optimum is event 0 (10).
+# Expected: best 10 0
+N 1 0
+E 0 10 10
+E 4 6 3
+best

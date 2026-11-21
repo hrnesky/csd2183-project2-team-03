@@ -36,6 +36,44 @@ std::vector<int> most_events(const std::vector<Event> & events) {
   return  result;
 }
 
-std::vector<int> best_events(const std::vector<Event> & /*events*/) {
-  return {};  // TODO
+std::vector<int> best_events(const std::vector<Event> & events) {
+
+  const int n = static_cast<int>(events.size());
+  std::vector<int> order(n);
+  std::iota(order.begin(), order.end(), 0);
+
+  std::stable_sort(order.begin(), order.end(), [&](int a, int b)
+  {
+    return events[a].finish < events[b].finish;
+  });
+
+  // finish times in sorted order, for binary search
+  std::vector<std::int64_t> finish(n);
+  for (int i = 0; i < n; ++i) finish[i] = events[order[i]].finish;
+
+  std::vector<int> p(n); // p[i]: events [0, p[i]) are compatible with i
+  std::vector<std::int64_t> dp(n + 1, 0);
+
+  for (int i = 0; i < n; i++)
+  {
+    p[i] = static_cast<int>(std::upper_bound(finish.begin(), finish.begin() + i,
+                            events[order[i]].start) - finish.begin());
+
+    dp[i + 1] = std::max(dp[i], dp[p[i]] + events[order[i]].reward);
+  }
+
+  // Walk back through the table to rebuild the chosen set.
+  std::vector<int> chosen;
+  for (int i = n; i > 0;) {
+    const int e = order[i - 1];
+    if (dp[i] == dp[i - 1]) {
+      --i;  // skipping was just as good
+    } else {
+      chosen.push_back(e);
+      i = p[i - 1];
+    }
+  }
+
+  std::sort(chosen.begin(), chosen.end());
+  return chosen;  // TODO
 }
