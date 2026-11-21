@@ -1,0 +1,29 @@
+# Cross-checks maintain kruskal and maintain prim across disconnected regions,
+# isolated islands, equal-weight cycles, zero-length bridges, and world resets.
+N 9 0
+# Region 1 (islands 0, 1, 2, 3): equal-weight diamond with a zero-length diagonal
+B 0 1 5
+B 1 2 5
+B 2 3 5
+B 3 0 5
+B 1 3 0
+# Region 2 (islands 4, 5, 6): triangle with equal weights
+B 4 5 7
+B 5 6 7
+B 4 6 7
+# Islands 7 and 8 are isolated singletons
+# Sea routes added to ensure both algorithms ignore them
+R 3 4 -10
+R 6 7 2
+maintain kruskal
+maintain prim
+# Add a bridge merging Region 1 and Region 2, then re-verify agreement
+B 2 4 3
+maintain kruskal
+maintain prim
+# Reset world to test state cleanup on a smaller graph with all zero-length edges
+N 4 0
+B 0 1 0
+B 2 3 0
+maintain kruskal
+maintain prim
