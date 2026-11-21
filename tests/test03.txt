@@ -1,0 +1,19 @@
+# Targets Dijkstra's algorithm: stale priority queue entries (multi-hop path
+# beating a direct expensive bridge), 64-bit distance overflow, ignoring sea
+# routes, self-queries, and unreachable islands.
+N 6 0
+# Direct expensive bridge vs. multi-hop cheaper path to trigger heap key updates
+B 0 3 1000000000
+B 0 1 300000000
+B 1 2 300000000
+B 2 3 300000000
+# Trap: cheaper sea route shortcut and a negative sea route (must be ignored by fastest)
+R 0 3 1
+R 2 3 -500000000
+# Disconnected region (islands 4, 5)
+B 4 5 10
+R 3 4 1
+fastest 0 3
+fastest 3 0
+fastest 2 2
+fastest 0 5

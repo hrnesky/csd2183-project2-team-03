@@ -1,4 +1,5 @@
-> From: https://chat.deepseek.com/share/xueixbghwq1x9h0wre
+# Chat summary: Verifying Prim's algorithm
+# Link: https://chat.deepseek.com/share/xueixbghwq1x9h0wre
 
 # you asked
 
