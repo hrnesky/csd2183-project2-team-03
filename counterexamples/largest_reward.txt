@@ -1,0 +1,9 @@
+# Counterexample: "largest reward first" is not optimal for best.
+# Event 0 (reward 10) overlaps both events 1 and 2, which do not overlap each
+# other. Greedy takes event 0 (total 10); the optimum is events 1 and 2 (12).
+# Expected: best 12 1 2
+N 1 0
+E 0 10 10
+E 0 5 6
+E 5 10 6
+best
