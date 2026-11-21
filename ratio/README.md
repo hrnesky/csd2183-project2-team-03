@@ -10,8 +10,6 @@ Files:
 Dependencies: Python 3.14, pandas 3.1.1, matplotlib 3.11.2
   (pip install pandas matplotlib)
 
-Environment: g++ 16.1.0 (MinGW-w64), Windows, <your processor model>
-
 Build and run (from the repo root, Windows):
   g++ -std=c++23 -O2 -Iinclude ratio/ratio.cpp src/events.cpp -o build/ratio.exe
   build\ratio.exe > ratio\results.csv
