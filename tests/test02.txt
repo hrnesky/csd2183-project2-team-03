@@ -1,0 +1,9 @@
+# regions must handle a single island, a world with no bridges at all, and a
+# zero-length bridge, which still joins two islands.
+N 1 0
+regions
+N 5 0
+regions
+N 2 0
+B 0 1 0
+regions

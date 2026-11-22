@@ -1,0 +1,8 @@
+# region_labels must order regions by their smallest island, not by BFS root
+# or hub: island 0 is a leaf of the component {0,1,2,5} whose hub is island 5.
+N 6 0
+B 5 0
+B 5 1
+B 5 2
+B 3 4
+regions
