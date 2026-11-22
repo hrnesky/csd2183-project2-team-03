@@ -1,0 +1,41 @@
+# kruskal_equal_weights: ties, zero-weight bridges, several components.
+# 19 islands, 5 regions, so a minimum spanning forest has 19 - 5 = 14 bridges.
+# Expected first line of BOTH queries: "maintain 60 14".
+# The edge lines are NOT unique (ties), so compare only the first line and
+# validate the forest with a script.
+N 19 0
+
+# Region A: islands 0-8, a 3x3 grid, every bridge 5 (12 bridges, tree = 8 x 5 = 40).
+# Some bridges are given larger island first, to test orientation handling.
+B 0 1 5
+B 2 1 5
+B 3 4 5
+B 5 4 5
+B 6 7 5
+B 8 7 5
+B 0 3 5
+B 6 3 5
+B 1 4 5
+B 7 4 5
+B 2 5 5
+B 8 5 5
+
+# Region B: islands 9-12, a 4-cycle, every bridge 5 (tree = 3 x 5 = 15).
+B 9 10 5
+B 10 11 5
+B 11 12 5
+B 12 9 5
+
+# Region C: islands 13-15, a triangle with one zero-length bridge (tree = 0 + 5 = 5).
+B 13 14 0
+B 14 15 5
+B 13 15 5
+
+# Island 16 is a single-island region: contributes nothing.
+
+# Region D: islands 17-18 joined only by a zero-length bridge (tree = 0, 1 bridge).
+B 17 18 0
+
+# Total: 40 + 15 + 5 + 0 = 60, bridges: 8 + 3 + 2 + 1 = 14.
+maintain kruskal
+maintain prim
