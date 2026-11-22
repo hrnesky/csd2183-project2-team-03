@@ -1,0 +1,11 @@
+# Check negative-edge shortest paths, unreachable islands, zero edges and same source/target without negative cycles.
+N 6 0
+R 0 1 5
+R 0 2 4
+R 1 2 -2
+R 2 3 1
+stamina 0 3
+stamina 0 5
+stamina 3 3
+R 3 4 0
+stamina 0 4
