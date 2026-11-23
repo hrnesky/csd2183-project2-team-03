@@ -3,11 +3,26 @@
 
 #include <cassert>
 #include <cstdint>
+#include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <random>
 #include <string>
 #include <unordered_set>
 #include <vector>
+
+namespace {
+
+void check_same_weight(int n, const std::vector<Edge> &bridges) {
+    const SpanningForest k = kruskal(n, bridges);
+    const SpanningForest p = prim(n, bridges);
+    if (k.total_length != p.total_length) {
+        std::cerr << "Kruskal/Prim weight mismatch for n=" << n << '\n';
+        std::exit(EXIT_FAILURE);
+    }
+}
+
+}  // namespace
 
 // 1. Sparse random graph (~4n bridges)
 std::vector<Edge> make_sparse(int n, std::uint32_t seed) {
@@ -79,12 +94,13 @@ int main() {
     ankerl::nanobench::Bench bench;
     bench.title("MSF: Kruskal vs Prim")
          .unit("graph")
-         .epochs(5)
-         .minEpochIterations(1);
+         .epochs(7)
+         .minEpochIterations(5);
 
     // Sparse graphs: 4 sizes including n = 2^18[cite: 10]
     for (int n : {1 << 12, 1 << 14, 1 << 16, 1 << 18}) {
         auto bridges = make_sparse(n, 42);
+        check_same_weight(n, bridges);
         bench.run("sparse_kruskal_n=" + std::to_string(n), [&] {
             ankerl::nanobench::doNotOptimizeAway(kruskal(n, bridges));
         });
@@ -96,6 +112,7 @@ int main() {
     // Dense graphs: 4 sizes including n = 2^12[cite: 10]
     for (int n : {1 << 9, 1 << 10, 1 << 11, 1 << 12}) {
         auto bridges = make_dense(n, 42);
+        check_same_weight(n, bridges);
         bench.run("dense_kruskal_n=" + std::to_string(n), [&] {
             ankerl::nanobench::doNotOptimizeAway(kruskal(n, bridges));
         });
@@ -108,12 +125,23 @@ int main() {
     for (int side : {64, 128, 256, 512}) {
         int n = side * side;
         auto bridges = make_grid(side, side, 42);
+        check_same_weight(n, bridges);
         bench.run("grid_kruskal_n=" + std::to_string(n), [&] {
             ankerl::nanobench::doNotOptimizeAway(kruskal(n, bridges));
         });
         bench.run("grid_prim_n=" + std::to_string(n), [&] {
             ankerl::nanobench::doNotOptimizeAway(prim(n, bridges));
         });
+    }
+    
+    std::ofstream csv("bench/results/msf_results.csv");
+    csv << "benchmark,median_seconds,median_abs_percent_error\n";
+    for (const auto &result : bench.results()) {
+        csv << '"' << result.config().mBenchmarkName << "\","
+            << result.median(ankerl::nanobench::Result::Measure::elapsed) << ','
+            << result.medianAbsolutePercentError(
+                   ankerl::nanobench::Result::Measure::elapsed)
+            << '\n';
     }
 
     return 0;
