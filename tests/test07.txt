@@ -1,0 +1,19 @@
+# Targets Dijkstra's algorithm on zero-weight bridges and equal-cost shortest
+# paths, verifying that parent pointers reconstruct a valid path matching dist.
+N 7 0
+# Zero-weight chain (0 -> 1 -> 2 -> 3 = 0) beating a direct bridge (0 -> 3 = 4)
+B 0 3 4
+B 0 1 0
+B 1 2 0
+B 2 3 0
+# Equal-cost diamond paths from 3 to 5 (3 -> 4 -> 5 = 6 and 3 -> 6 -> 5 = 6)
+B 3 4 2
+B 4 5 4
+B 3 6 5
+B 6 5 1
+# Direct bridge from 0 to 5 of length 6 (creates a 3-way tie of total length 6)
+B 0 5 6
+fastest 0 3
+fastest 0 5
+fastest 5 0
+fastest 2 2

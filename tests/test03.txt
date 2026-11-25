@@ -1,0 +1,14 @@
+# Check reachable negative cycles even if they do not lead to target, and ignore unreachable negative cycles.
+N 6 0
+R 0 1 2
+R 1 2 -5
+R 2 1 3
+R 3 4 -10
+R 4 3 1
+stamina 0 5
+N 6 0
+R 0 1 2
+R 3 4 -10
+R 4 3 1
+stamina 0 1
+stamina 0 4
