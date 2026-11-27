@@ -1,5 +1,5 @@
 # Comparing Greedy and Dynamic Programming
-# link: https://gemini.google.com/app/b17f97f2bcd42971
+# link: https://share.gemini.google/Sot0fz5S7e0I
 
 # User prompt: Gemini I need confirmation on something, if I need to showcase between 2 different algorithms which is greedy algo vs dynamic programming. How do I showcase them especially in a situation of a best_event function. Is it right that I have to create a seperate experiment to see how close greedy rules get to the best possible?
 

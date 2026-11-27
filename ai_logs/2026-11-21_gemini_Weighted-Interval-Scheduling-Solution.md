@@ -1,5 +1,5 @@
 # Weighted Interval Scheduling Solution
-# link: https://gemini.google.com/app/2813757484b8b9e0
+# link: https://share.gemini.google/7qgRjEAMcNAJ
 
 # User prompt: Gemini my project requires me to create a function that fulfill this criteria and the choices right now is between greedy and dynamic prgramming but i think dynamic is the way to go because greedy might take the best looking event and ignore possible better event combinations there is. Right now my idea is that we sort the events by finish time then each event we see whether to skip or to take it. What do you think and how I should approach
 
