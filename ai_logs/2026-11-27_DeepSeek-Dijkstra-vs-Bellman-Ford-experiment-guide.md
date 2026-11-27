@@ -3,7 +3,7 @@
 **Created:** 11/27/2026 02:16  
 **Updated:** 11/27/2026 02:24  
 **Exported:** 11/27/2026 02:35  
-**Link:** [https://chat.deepseek.com/a/chat/s/a0447416-b9c6-4623-8115-9b4b26d6c780](https://chat.deepseek.com/a/chat/s/a0447416-b9c6-4623-8115-9b4b26d6c780)  
+**Link:** [https://chat.deepseek.com/share/ysv23r6x1kfff3x8tm]
 
 ## User:
 I'm working on my Data Structures Project 2, and my part is to compare Dijkstra and Bellman-Ford.

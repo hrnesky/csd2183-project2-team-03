@@ -3,7 +3,7 @@
 **Created:** 11/21/2026 21:34  
 **Updated:** 11/23/2026 02:42  
 **Exported:** 11/23/2026 02:46  
-**Link:** [https://chat.deepseek.com/a/chat/s/4498cd29-e93b-4a7e-9b37-8151e744da0c](https://chat.deepseek.com/a/chat/s/4498cd29-e93b-4a7e-9b37-8151e744da0c)  
+**Link:** [https://chat.deepseek.com/share/o34fwcjypcklznx7ut] 
 
 ## User:
 im working on a ds team project shortest paths greedy algo and dynamic programming i have to do the bellman ford with negative cycle detection and path reconstruction. then comparer dijkstra and bellman ford through test and experiments. dont give me any code just help me with my understanding and the algorithm for me to follow
